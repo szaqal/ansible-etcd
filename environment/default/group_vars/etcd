@@ -1,0 +1,4 @@
+google_url: https://storage.googleapis.com/etcd
+github_url: https://github.com/etcd-io/etcd/releases/download
+etcd_version: v3.4.16
+

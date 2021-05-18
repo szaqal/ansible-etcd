@@ -1,0 +1,25 @@
+---
+- name: ETCD-CLUSTER
+  hosts: etcd
+  become: true
+  tasks:
+    - name: 'Install unzip/tar'
+      dnf:
+        name: 
+          - unzip
+          - tar
+    - name: "Pull etcd"
+      get_url:
+        url: '{{google_url}}/{{etcd_version}}/etcd-{{etcd_version}}-linux-amd64.tar.gz'
+        dest: "{{ ansible_env.HOME }}"
+        checksum: md5:8107d61ea56d32f4c90581bb3a22e021
+    - name: "Unpack"   
+      unarchive: 
+        src: '{{ ansible_env.HOME }}/etcd-{{etcd_version}}-linux-amd64.tar.gz'
+        dest: '/opt'
+        remote_src: yes
+    - name: Create a symbolic link
+      ansible.builtin.file:
+        src: /opt/etcd-{{etcd_version}}-linux-amd64
+        dest: /opt/etcd
+        state: link        
