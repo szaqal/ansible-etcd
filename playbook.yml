@@ -5,7 +5,7 @@
   tasks:
     - name: 'Install unzip/tar'
       dnf:
-        name: 
+        name:
           - unzip
           - tar
     - name: "Pull etcd"
@@ -17,10 +17,14 @@
       get_url:
         url: '{{cfssl_download_url}}/v{{cfssl_version}}/cfssl-bundle_{{cfssl_version}}_linux_amd64'
         dest: '/opt'
-        
-        checksum: md5:8a52204bc7d319bc06cce810133153f6        
-    - name: "Unpack etcd"   
-      unarchive: 
+        checksum: md5:8a52204bc7d319bc06cce810133153f6
+    - name: 'Pull cfssljson'
+      get_url:
+        url: '{{cfssl_download_url}}/v{{cfssl_version}}/cfssljson_{{cfssl_version}}_linux_amd64'
+        dest: '/opt'
+        checksum: md5:2d4e4fa8b44e12da6b19c0aba1cb65d5
+    - name: "Unpack etcd"
+      unarchive:
         src: '{{ ansible_env.HOME }}/etcd-{{etcd_version}}-linux-amd64.tar.gz'
         dest: '/opt'
         remote_src: yes
@@ -28,14 +32,19 @@
       ansible.builtin.file:
         src: /opt/etcd-{{etcd_version}}-linux-amd64
         dest: /opt/etcd
-        state: link           
+        state: link
     - name: etcd dir symlink
       ansible.builtin.file:
         src: /opt/etcd/etcd
         dest: /usr/bin/etcd
-        state: link                 
+        state: link
     - name: cfssl exec symlink
       ansible.builtin.file:
         src: /opt/cfssl-bundle_{{cfssl_version}}_linux_amd64
         dest: /usr/bin/cfssl
-        state: link            
+        state: link
+    - name: cfssl exec symlink
+      ansible.builtin.file:
+        src: /opt/cfssljson_{{cfssl_version}}_linux_amd64
+        dest: /usr/bin/cfssljson
+        state: link        
