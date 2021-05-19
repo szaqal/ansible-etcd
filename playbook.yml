@@ -51,7 +51,9 @@
       template: src='{{item.src}}' dest='{{item.dest}}' mode=0744       
       loop:
         - {src: 'ca-csr.json.j2', dest: '{{etcd_certs_dir}}/ca-csr.jso'}
+        - {src: 'ca-config.json.j2', dest: '{{etcd_certs_dir}}/ca-config.json'}
         - {src: 'certgen.sh.j2', dest: '/tmp/certgen.sh'}
+        - {src: 'etcd.service.j2', dest: '/etc/systemd/system/etcd.service'}
 
 
     - name: 'CA cert'
