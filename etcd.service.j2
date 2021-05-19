@@ -4,12 +4,22 @@ After=network.target
 StartLimitIntervalSec=0
 [Service]
 
-Environment=ETCD_DATA_DIR={{etcd_data_dir}}
-Environment=ETCD_WAL_DIR={{etcd_wal_dir}}
+Environment=ETCD_DATA_DIR={{ etcd_data_dir }}
+Environment=ETCD_WAL_DIR={{ etcd_wal_dir }}
 Environment=ETCD_NAME={{ inventory_hostname  }}
 Environment=ETCD_INITIAL_CLUSTER_TOKEN={{ etcd_cluster_token }}
 Environment=ETCD_INITIAL_CLUSTER_STATE=new
-Environment=ETCD_LISTEN_CLIENT_URLS={{ hostvars[inventory_hostname].ansible_ssh_host  }}:2379
+Environment=ETCD_LISTEN_CLIENT_URLS=https://{{ hostvars[inventory_hostname].ansible_ssh_host  }}:2379
+Environment=ETCD_ADVERTISE_CLIENT_URLS=https://{{ hostvars[inventory_hostname].ansible_ssh_host  }}:2379
+
+
+Environment=ETCD_CERT_FILE={{ etcd_certs_dir }}/node.pem
+Environment=ETCD_KEY_FILE={{ etcd_certs_dir }}/node-key.pem
+Environment=ETCD_PEER_TRUSTED_CA_FILE={{ etcd_certs_dir }}/ca.pem
+Environment=ETCD_PEER_CERT_FILE={{ etcd_certs_dir }}/node.pem
+Environment=ETCD_PEER_KEY_FILE={{ etcd_certs_dir }}/node-key.pem
+Environment=ETCD_LISTEN_PEER_URLS=https://{{ hostvars[inventory_hostname].ansible_ssh_host  }}:2380
+
 
 
 Type=simple
