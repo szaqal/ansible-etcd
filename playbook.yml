@@ -8,25 +8,22 @@
         name:
           - unzip
           - tar
+
+    - name: 'Pull cfssl'
+      get_url:
+        url: "{{item.url}}"
+        dest: '/opt'
+        mode: 0744        
+      loop:
+        - { url: '{{cfssl_download_url}}/v{{cfssl_version}}/cfssl_{{cfssl_version}}_linux_amd64' }
+        - { url: '{{cfssl_download_url}}/v{{cfssl_version}}/cfssljson_{{cfssl_version}}_linux_amd64' }
+
     - name: "Pull etcd"
       get_url:
         url: '{{google_url}}/{{etcd_version}}/etcd-{{etcd_version}}-linux-amd64.tar.gz'
         dest: "{{ ansible_env.HOME }}"
         checksum: md5:8107d61ea56d32f4c90581bb3a22e021
     
-    - name: 'Pull cfssl'
-      get_url:
-        url: '{{cfssl_download_url}}/v{{cfssl_version}}/cfssl_{{cfssl_version}}_linux_amd64'
-        dest: '/opt'
-        checksum: md5:212fc80b19cd3182bb54882c9f7c5f61
-        mode: 0744
-    
-    - name: 'Pull cfssljson'
-      get_url:
-        url: '{{cfssl_download_url}}/v{{cfssl_version}}/cfssljson_{{cfssl_version}}_linux_amd64'
-        dest: '/opt'
-        checksum: md5:2d4e4fa8b44e12da6b19c0aba1cb65d5
-        mode: 0744
     
     - name: 'Unpack etcd'
       unarchive:
