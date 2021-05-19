@@ -7,6 +7,10 @@ StartLimitIntervalSec=0
 Environment=ETCD_DATA_DIR={{ etcd_data_dir }}
 Environment=ETCD_WAL_DIR={{ etcd_wal_dir }}
 Environment=ETCD_NAME={{ inventory_hostname  }}
+
+
+#node1=https://$(IP_ADDR):2381,node2=https://$(IP_ADDR):2382,node3=https://$(IP_ADDR):2383
+Environment=ETCD_INITIAL_CLUSTER=node=
 Environment=ETCD_INITIAL_CLUSTER_TOKEN={{ etcd_cluster_token }}
 Environment=ETCD_INITIAL_CLUSTER_STATE=new
 Environment=ETCD_LISTEN_CLIENT_URLS=https://{{ hostvars[inventory_hostname].ansible_ssh_host  }}:2379

@@ -2,7 +2,35 @@
 - name: ETCD-CLUSTER
   hosts: etcd
   become: true
+
+   
+
   tasks:
+
+    - name:
+      set_fact:
+        ectd_values: []
+
+    - name:
+      set_fact:
+        hosts_detected: "{{ groups['etcd']}}" 
+
+    - name:
+      set_fact:
+        ectd_values: "{{ectd_values}} + ['{{item}}={{ hostvars[item].ansible_ssh_host}}']"
+      with_items:
+        - "{{ hosts_detected }}"
+
+
+
+    - name:
+      set_fact:
+        aaa: "{{ectd_values|join(',')}}"
+
+    - name: 'debug'
+      debug: msg="{{aaa}}"
+
+
     - name: 'Install unzip/tar'
       dnf:  
         name:
@@ -46,6 +74,18 @@
         - {path: '{{etcd_data_dir}}'}
         - {path: '{{etcd_wal_dir}}'}
         - {path: '{{etcd_certs_dir}}'}
+
+
+
+
+
+
+
+
+
+
+
+
 
     - name: 'templates'
       template: src='{{item.src}}' dest='{{item.dest}}' mode=0744       
