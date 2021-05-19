@@ -4,7 +4,7 @@
   become: true
   tasks:
     - name: 'Install unzip/tar'
-      dnf:
+      dnf:  
         name:
           - unzip
           - tar
@@ -13,10 +13,11 @@
       get_url:
         url: "{{item.url}}"
         dest: '/opt'
+        checksum: "{{item.checksum}}"
         mode: 0744        
       loop:
-        - { url: '{{cfssl_download_url}}/v{{cfssl_version}}/cfssl_{{cfssl_version}}_linux_amd64' }
-        - { url: '{{cfssl_download_url}}/v{{cfssl_version}}/cfssljson_{{cfssl_version}}_linux_amd64' }
+        - { url: '{{cfssl_download_url}}/v{{cfssl_version}}/cfssl_{{cfssl_version}}_linux_amd64', checksum: "md5:212fc80b19cd3182bb54882c9f7c5f61" }
+        - { url: '{{cfssl_download_url}}/v{{cfssl_version}}/cfssljson_{{cfssl_version}}_linux_amd64', checksum: "md5:2d4e4fa8b44e12da6b19c0aba1cb65d5" }
 
     - name: "Pull etcd"
       get_url:
@@ -30,30 +31,18 @@
         src: '{{ ansible_env.HOME }}/etcd-{{etcd_version}}-linux-amd64.tar.gz'
         dest: '/opt'
         remote_src: yes
-    
-    - name: 'etcd dir symlink'
+
+    - name: 'Symlinks'        
       file:
-        src: /opt/etcd-{{etcd_version}}-linux-amd64
-        dest: /opt/etcd
+        src: "{{item.src}}"
+        dest: "{{item.dest}}"
         state: link
-    
-    - name: 'etcd dir symlink'
-      file:
-        src: /opt/etcd/etcd
-        dest: /usr/bin/etcd
-        state: link
-    
-    - name: 'cfssl exec symlink'
-      file:
-        src: /opt/cfssl_{{cfssl_version}}_linux_amd64
-        dest: /usr/bin/cfssl
-        state: link
-    
-    - name: 'cfssl exec symlink'
-      file:
-        src: /opt/cfssljson_{{cfssl_version}}_linux_amd64
-        dest: /usr/bin/cfssljson
-        state: link
+      loop:
+        - { src: '/opt/etcd-{{etcd_version}}-linux-amd64', dest: "/opt/etcd" }
+        - { src: '/opt/etcd/etcd', dest: "/usr/bin/etcd" }
+        - { src: '/opt/cfssl_{{cfssl_version}}_linux_amd64', dest: "/usr/bin/cfssl" }
+        - { src: '/opt/cfssljson_{{cfssl_version}}_linux_amd64', dest: "/usr/bin/cfssljson" }
+
 
     - name: 'etcd certs dir'
       file:
