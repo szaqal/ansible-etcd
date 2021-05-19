@@ -33,32 +33,26 @@
         remote_src: yes
 
     - name: 'Symlinks'        
-      file:
-        src: "{{item.src}}"
-        dest: "{{item.dest}}"
-        state: link
+      file: src="{{item.src}}" dest="{{item.dest}}" state=link
       loop:
         - { src: '/opt/etcd-{{etcd_version}}-linux-amd64', dest: "/opt/etcd" }
         - { src: '/opt/etcd/etcd', dest: "/usr/bin/etcd" }
         - { src: '/opt/cfssl_{{cfssl_version}}_linux_amd64', dest: "/usr/bin/cfssl" }
         - { src: '/opt/cfssljson_{{cfssl_version}}_linux_amd64', dest: "/usr/bin/cfssljson" }
 
+    - name: 'etcd work dirs'
+      file: path={{item.path}} state=directory    
+      loop:
+        - {path: '{{etcd_data_dir}}'}
+        - {path: '{{etcd_wal_dir}}'}
+        - {path: '{{etcd_certs_dir}}'}
 
-    - name: 'etcd certs dir'
-      file:
-        path: '{{etcd_certs_dir}}'
-        state: directory
+    - name: 'templates'
+      template: src='{{item.src}}' dest='{{item.dest}}' mode=0744       
+      loop:
+        - {src: 'ca-csr.json.j2', dest: '{{etcd_certs_dir}}/ca-csr.jso'}
+        - {src: 'certgen.sh.j2', dest: '/tmp/certgen.sh'}
 
-    - name: 'csr template'
-      template:
-        src: ca-csr.json.j2
-        dest: '{{etcd_certs_dir}}/ca-csr.json'
-
-    - name: 'cert gen script'
-      template:
-        src: certgen.sh.j2
-        dest: '/tmp/certgen.sh'
-        mode: 0744
 
     - name: 'CA cert'
       command: '/tmp/certgen.sh'
