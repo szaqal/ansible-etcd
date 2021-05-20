@@ -10,12 +10,12 @@ Environment=ETCD_NAME={{ inventory_hostname  }}
 
 
 
-Environment=ETCD_INITIAL_CLUSTER=https://{{ cluster_url }}
+Environment=ETCD_INITIAL_CLUSTER={{ cluster_url }}
 Environment=ETCD_INITIAL_CLUSTER_TOKEN={{ etcd_cluster_token }}
 Environment=ETCD_INITIAL_CLUSTER_STATE=new
 Environment=ETCD_LISTEN_CLIENT_URLS=https://{{ hostvars[inventory_hostname].ansible_ssh_host  }}:2379
 Environment=ETCD_ADVERTISE_CLIENT_URLS=https://{{ hostvars[inventory_hostname].ansible_ssh_host  }}:2379
-
+Environment=ETCD_INITIAL_ADVERTISE_PEER_URLS=https://{{ hostvars[inventory_hostname].ansible_ssh_host  }}:2380
 
 Environment=ETCD_CERT_FILE={{ etcd_certs_dir }}/node.pem
 Environment=ETCD_KEY_FILE={{ etcd_certs_dir }}/node-key.pem
