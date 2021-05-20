@@ -17,19 +17,16 @@
 
     - name:
       set_fact:
-        ectd_values: "{{ectd_values}} + ['{{item}}={{ hostvars[item].ansible_ssh_host}}']"
+        ectd_values: "{{ectd_values}} + ['{{item}}={{ hostvars[item].ansible_ssh_host}}:2380']"
       with_items:
         - "{{ hosts_detected }}"
 
-
-
-    - name:
+    - name: 'Cluster url'
       set_fact:
-        aaa: "{{ectd_values|join(',')}}"
+        cluster_url: "{{ectd_values|join(',')}}"
 
     - name: 'debug'
-      debug: msg="{{aaa}}"
-
+      debug: msg="{{cluster_url}}"
 
     - name: 'Install unzip/tar'
       dnf:  
@@ -74,18 +71,6 @@
         - {path: '{{etcd_data_dir}}'}
         - {path: '{{etcd_wal_dir}}'}
         - {path: '{{etcd_certs_dir}}'}
-
-
-
-
-
-
-
-
-
-
-
-
 
     - name: 'templates'
       template: src='{{item.src}}' dest='{{item.dest}}' mode=0744       
