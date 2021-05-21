@@ -38,7 +38,7 @@
       systemd: name=chronyd enabled=yes state=started
 
     - name: 'Stop firewalld'  #TODO add rules
-      systemd: name=chronyd enabled=no state=stopped
+      systemd: name=firewalld enabled=no state=stopped
 
     - name: 'Pull cfssl'
       get_url: url="{{item.url}}" dest='/opt' checksum="{{item.checksum}}" mode=0744
