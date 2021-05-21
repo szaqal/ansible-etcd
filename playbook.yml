@@ -61,6 +61,7 @@
       loop:
         - { src: '/opt/etcd-{{etcd_version}}-linux-amd64', dest: "/opt/etcd" }
         - { src: '/opt/etcd/etcd', dest: "/usr/bin/etcd" }
+        - { src: '/opt/etcd/etcdctl', dest: "/usr/bin/etcdctl" }
         - { src: '/opt/cfssl_{{cfssl_version}}_linux_amd64', dest: "/usr/bin/cfssl" }
         - { src: '/opt/cfssljson_{{cfssl_version}}_linux_amd64', dest: "/usr/bin/cfssljson" }
 
