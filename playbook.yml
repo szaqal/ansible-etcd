@@ -113,3 +113,9 @@
 
     - name: 'Generate node certs'
       command: '/tmp/cert-gen.sh'
+
+- name: 'Start etcd'
+  hosts: etcd
+  become: true
+  tasks:
+    - systemd: name=etcd enabled=yes state=started
